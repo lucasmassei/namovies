@@ -1,9 +1,11 @@
 <template>
-   <nm-filter />
+  <div>Favorites</div>
 </template>
 
 <script>
-export default {}
+export default {
+
+}
 </script>
 
 <style>

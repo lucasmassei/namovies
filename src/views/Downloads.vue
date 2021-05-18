@@ -1,9 +1,11 @@
 <template>
-   <nm-filter />
+  <div>Downloads</div>
 </template>
 
 <script>
-export default {}
+export default {
+
+}
 </script>
 
 <style>

@@ -8,6 +8,16 @@ const routes = [
     path: '/',
     name: 'MoviesList',
     component: () => import('../views/MoviesList.vue')
+  },
+  {
+    path: '/baixados',
+    name: 'Downloads',
+    component: () => import('../views/Downloads.vue')
+  },
+  {
+    path: '/favoritos',
+    name: 'Favorites',
+    component: () => import('../views/Favorites.vue')
   }
 ]
 
