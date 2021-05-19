@@ -61,7 +61,6 @@ module.exports = {
     'vue/block-spacing': ['error', 'always'],
     'vue/no-reserved-component-names': ['error'],
     'vue/script-indent': ['error'],
-    'vue/static-class-names-order': ['error'],
     'vue/v-slot-style': ['error', 'shorthand']
 
     // Cypress
