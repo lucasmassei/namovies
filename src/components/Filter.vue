@@ -1,73 +1,26 @@
 <template>
-  <div class="nm-filter">
-    <div class="position-relative flex">
-      <input class="nm-filter__input font-roboto-regular" placeholder="Pesquisar por nome" type="text" />
-      <button class="nm-filter__icon position-absolute secondary-color">
-        <i class="fas fa-search"></i>
-      </button>
+  <div class="flex justify-center">
+    <div class="nm-filter">
+      <form class="position-relative flex" @submit="checkForm">
+        <input class="nm-filter__input font-roboto regular" placeholder="Pesquisar por nome" type="text" />
+        <button class="nm-filter__icon position-absolute secondary-color" type="submit">
+          <i class="fas fa-search"></i>
+        </button>
+      </form>
+      <ul class="flex font-arial bold">
+        <div v-for="(filter, index) in filterOptions" :key="index" class="nm-filter__items position-relative secondary-color">
+          <div class="flex" @click="toggleDropdownMenu(filter.type)">
+            <li class="nm-filter__keydrop">{{ filter.label }}</li>
+            <i class="nm-filter__drop fas fa-chevron-down"></i>
+          </div>
+          <div v-if="checkSelectedDropdownMenu(filter.type)" class="nm-menudrop position-absolute">
+            <ul class="font-arial bold primary-color">
+              <li v-for="(option, index) in filter.options" :key="index" class="nm-menudrop__item" @click="filterList(option.value, filter.type)">{{ option.label }}</li>
+            </ul>
+          </div>
+        </div>
+      </ul>
     </div>
-    <ul class="flex font-arial-bold">
-      <div class="nm-filter__items position-relative secondary-color">
-        <div class="flex" @click="openDropdownMenu('gender')">
-          <li class="nm-filter__keydrop">Gênero</li>
-          <i class="nm-filter__drop fas fa-chevron-down"></i>
-        </div>
-        <div v-if="showMenu === 'gender'" class="nm-menudrop position-absolute">
-          <ul class="font-arial-bold primary-color">
-            <li class="nm-menudrop__item">Ação</li>
-            <li class="nm-menudrop__item">Aventura</li>
-            <li class="nm-menudrop__item">Fantasia</li>
-            <li class="nm-menudrop__item">Comédia</li>
-            <li class="nm-menudrop__item">Suspense</li>
-        </ul>
-        </div>
-      </div>
-      <div class="nm-filter__items secondary-color position-relative">
-        <div class="flex" @click="openDropdownMenu('quality')">
-          <li class="nm-filter__keydrop">Qualidade</li>
-          <i class="nm-filter__drop fas fa-chevron-down"></i>
-        </div>
-        <div v-if="showMenu === 'quality'" class="nm-menudrop position-absolute">
-          <ul class="font-arial-bold primary-color">
-            <li class="nm-menudrop__item">Ação</li>
-            <li class="nm-menudrop__item">Aventura</li>
-            <li class="nm-menudrop__item">Fantasia</li>
-            <li class="nm-menudrop__item">Comédia</li>
-            <li class="nm-menudrop__item">Suspense</li>
-        </ul>
-        </div>
-      </div>
-      <div class="nm-filter__items secondary-color position-relative">
-        <div class="flex" @click="openDropdownMenu('rate')">
-          <li class="nm-filter__keydrop">Nota mínima</li>
-          <i class="nm-filter__drop fas fa-chevron-down"></i>
-        </div>
-        <div v-if="showMenu === 'rate'" class="nm-menudrop position-absolute">
-          <ul class="font-arial-bold primary-color">
-            <li class="nm-menudrop__item">Ação</li>
-            <li class="nm-menudrop__item">Aventura</li>
-            <li class="nm-menudrop__item">Fantasia</li>
-            <li class="nm-menudrop__item">Comédia</li>
-            <li class="nm-menudrop__item">Suspense</li>
-        </ul>
-        </div>
-      </div>
-      <div class="nm-filter__items secondary-color position-relative">
-        <div class="flex" @click="openDropdownMenu('order')">
-          <li class="nm-filter__keydrop">Ordenar por</li>
-          <i class="nm-filter__drop fas fa-chevron-down"></i>
-        </div>
-        <div v-if="showMenu === 'order'" class="nm-menudrop position-absolute">
-          <ul class="font-arial-bold primary-color">
-            <li class="nm-menudrop__item">Ação</li>
-            <li class="nm-menudrop__item">Aventura</li>
-            <li class="nm-menudrop__item">Fantasia</li>
-            <li class="nm-menudrop__item">Comédia</li>
-            <li class="nm-menudrop__item">Suspense</li>
-        </ul>
-        </div>
-      </div>
-    </ul>
   </div>
 </template>
 
@@ -75,17 +28,80 @@
 export default {
   data () {
     return {
-      showMenu: false
+      showMenu: false,
+      movie: null
     }
   },
 
   methods: {
-    openDropdownMenu (menu) {
-      if (this.showMenu === menu) {
-        this.showMenu = false
-      } else {
-        this.showMenu = menu
+    toggleDropdownMenu (menu) {
+      this.showMenu = this.showMenu === menu ? false : menu
+    },
+    checkSelectedDropdownMenu (menu) {
+      return this.showMenu === menu
+    },
+    checkForm () {
+      if (this.movie) {
+        return true
       }
+    },
+    filterList (value, type) {
+      console.log(value)
+      console.log(type)
+    }
+  },
+
+  computed: {
+    filterOptions () {
+      return [
+        {
+          type: 'genre',
+          label: 'Genêro',
+          options: [
+            { label: 'Ação', value: 'action' },
+            { label: 'Fantasia', value: 'fantasy' },
+            { label: 'Terror', value: 'horror' },
+            { label: 'Comédia', value: 'comedy' },
+            { label: 'Suspense', value: 'suspense' }
+          ]
+        },
+        {
+          type: 'minimum_rating',
+          label: 'Nota mínima',
+          options: [
+            { label: '0', value: '0' },
+            { label: '1', value: '1' },
+            { label: '2', value: '2' },
+            { label: '3', value: '3' },
+            { label: '4', value: '4' },
+            { label: '5', value: '5' },
+            { label: '6', value: '6' },
+            { label: '7', value: '7' },
+            { label: '8', value: '8' },
+            { label: '9', value: '9' }
+          ]
+        },
+        {
+          type: 'quality',
+          label: 'Qualidade',
+          options: [
+            { label: '720p', value: '720p' },
+            { label: '1080p', value: '1080p' },
+            { label: '2160p', value: '2160p' },
+            { label: '3D', value: '3D' }
+          ]
+        },
+        {
+          type: 'sort_by',
+          label: 'Ordenar por',
+          options: [
+            { label: 'Título', value: 'title' },
+            { label: 'Ano', value: 'year' },
+            { label: 'Notas', value: 'rating' },
+            { label: 'Recentes', value: 'date_added' }
+          ]
+        }
+      ]
     }
   }
 }
@@ -132,6 +148,18 @@ export default {
  border: 1px solid #BBBBBB;
  left: -50%;
  top: 25px;
+ animation: fadeIn .2s backwards;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translate3d(0px, 10px, 0px);
+  }
+  to {
+    opacity: 1;
+    transform: translate3d(0px, 0px, 0px);
+  }
 }
 
 .nm-menudrop__item {
