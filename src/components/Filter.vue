@@ -1,53 +1,40 @@
 <template>
   <div class="flex justify-center">
-    <div class="nm-filter">
-      <form class="position-relative flex" @submit="checkForm">
-        <input class="nm-filter__input font-roboto regular" placeholder="Pesquisar por nome" type="text" />
-        <button class="nm-filter__icon position-absolute secondary-color" type="submit">
-          <i class="fas fa-search"></i>
-        </button>
-      </form>
-      <ul class="flex font-arial bold">
-        <div v-for="(filter, index) in filterOptions" :key="index" class="nm-filter__items position-relative secondary-color">
-          <div class="flex" @click="toggleDropdownMenu(filter.type)">
-            <li class="nm-filter__keydrop">{{ filter.label }}</li>
-            <i class="nm-filter__drop fas fa-chevron-down"></i>
-          </div>
-          <div v-if="checkSelectedDropdownMenu(filter.type)" class="nm-menudrop position-absolute">
-            <ul class="font-arial bold primary-color">
-              <li v-for="(option, index) in filter.options" :key="index" class="nm-menudrop__item" @click="filterList(option.value, filter.type)">{{ option.label }}</li>
-            </ul>
-          </div>
+    <div class="container">
+      <div class="nm-filter">
+        <div class="position-relative flex">
+          <input v-model="search" class="nm-filter__input font-roboto regular" placeholder="Pesquisar por nome" type="text" @keyup.enter="sendSearch">
+          <button class="nm-filter__icon background-transparent cursor-pointer border-none position-absolute secondary-color font-size-lg" type="submit" @click="sendSearch">
+            <i class="fas fa-search" />
+          </button>
         </div>
-      </ul>
+        <ul class="flex align-items-center flex-wrap font-arial bold">
+          <div v-for="(filter, index) in filterOptions" :key="index" class="nm-filter__items cursor-pointer position-relative secondary-color">
+            <div class="flex" @click="toggleDropdownMenu(filter.type)">
+              <li class="nm-filter__keydrop">{{ filter.label }}</li>
+              <i class="nm-filter__drop fas fa-chevron-down font-size-md" />
+            </div>
+            <div v-if="checkSelectedDropdownMenu(filter.type)" class="nm-menudrop position-absolute">
+              <ul class="font-arial bold primary-color">
+                <li v-for="(option, index) in filter.options" :key="index" class="nm-menudrop__item cursor-pointer" @click="filterList(option.value, filter.type)">{{ option.label }}</li>
+              </ul>
+            </div>
+          </div>
+        </ul>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+
 export default {
   data () {
     return {
       showMenu: false,
-      movie: null
-    }
-  },
-
-  methods: {
-    toggleDropdownMenu (menu) {
-      this.showMenu = this.showMenu === menu ? false : menu
-    },
-    checkSelectedDropdownMenu (menu) {
-      return this.showMenu === menu
-    },
-    checkForm () {
-      if (this.movie) {
-        return true
-      }
-    },
-    filterList (value, type) {
-      console.log(value)
-      console.log(type)
+      movie: null,
+      acao: {},
+      search: ''
     }
   },
 
@@ -103,6 +90,26 @@ export default {
         }
       ]
     }
+  },
+
+  methods: {
+    toggleDropdownMenu (menu) {
+      this.showMenu = this.showMenu === menu ? false : menu
+    },
+    checkSelectedDropdownMenu (menu) {
+      return this.showMenu === menu
+    },
+    checkForm () {
+      if (this.movie) {
+        return true
+      }
+    },
+    sendSearch () {
+      this.$emit('search', this.search)
+    },
+    filterList (value, type) {
+      this.$emit('filterMovies', { value, type })
+    }
   }
 }
 </script>
@@ -116,9 +123,6 @@ export default {
 .nm-filter__icon {
   right: 20px;
   top: 2px;
-  border: none;
-  font-size: 1.25em;
-  cursor: pointer;
   padding: 10px;
   border-radius: 50%;
 }
@@ -130,8 +134,7 @@ export default {
 }
 
 .nm-filter__items {
-  margin: 18px 80px 0px 0px;
-  cursor: pointer;
+  margin: 20px 80px 0px 0px;
 }
 
 .nm-filter__keydrop {
@@ -140,15 +143,16 @@ export default {
 
 .nm-filter__drop {
   align-self: center;
-  font-size: .90em;
 }
 
 .nm-menudrop{
- width: 212px;
- border: 1px solid #BBBBBB;
- left: -50%;
- top: 25px;
- animation: fadeIn .2s backwards;
+  background-color: #fff;
+  width: 212px;
+  border: 1px solid #BBBBBB;
+  left: -50%;
+  top: 25px;
+  animation: fadeIn .2s backwards;
+  z-index: 2;
 }
 
 @keyframes fadeIn {
@@ -165,7 +169,6 @@ export default {
 .nm-menudrop__item {
   padding: 21px 0px 19px 17px;
   border-bottom: 1px solid #BBBBBB;
-  cursor: pointer;
 }
 
 .nm-menudrop__item:last-child {

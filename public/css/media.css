@@ -1,0 +1,10 @@
+@media (max-width: 900px) {
+  .nm-header__items {
+    justify-content: center;
+  }
+  .nm-movielist {
+    justify-content: center;
+  }
+}
+
+
