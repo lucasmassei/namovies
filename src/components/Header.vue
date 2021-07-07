@@ -1,18 +1,18 @@
 <template>
-<div class="nm-header">
-  <div class="container flex justify-between">
-    <div class="flex align-items-center">
-      <i class="nm-header__icon primary-color fas fa-film"></i>
-      <h1 class="nm-header__title align-self-center font-arial bold primary-color">NaMovies</h1>
+  <div class="nm-header">
+    <div class="nm-header__items container flex justify-between flex-wrap">
+      <div class="flex align-items-center">
+        <i class="nm-header__icon primary-color fas fa-film" />
+        <h1 class="nm-header__title align-self-center font-arial bold primary-color">NaMovies</h1>
+      </div>
+      <ul class="nm-header__navigation flex align-items-center font-arial bold">
+        <li v-for="(link, index) in navigationLinks" :key="index" class="nm-header__link" @click="placeLineOnLink(link.routeName)">
+          <router-link class="primary-color" :to="{name: link.routeName}">{{ link.label }}</router-link>
+          <hr v-if="checkSelectedNav(link.routeName)" class="nm-header__link-select border-none">
+        </li>
+      </ul>
     </div>
-    <ul class="flex align-self-center font-arial bold">
-      <li v-for="(link, index) in navigationLinks" :key="index" class="nm-header__link" @click="placeLineOnLink(link.routeName)">
-        <router-link class="primary-color" :to="{name: link.routeName}">{{ link.label }}</router-link>
-        <hr v-if="checkSelectedNav(link.routeName)" class="nm-header__link-select">
-      </li>
-    </ul>
   </div>
-</div>
 </template>
 
 <script>
@@ -20,15 +20,6 @@ export default {
   data () {
     return {
       showLine: false
-    }
-  },
-
-  methods: {
-    placeLineOnLink (nav) {
-      this.showLine = nav
-    },
-    checkSelectedNav (nav) {
-      return this.showLine === nav
     }
   },
 
@@ -53,6 +44,15 @@ export default {
 
   created () {
     this.placeLineOnLink('MoviesList')
+  },
+
+  methods: {
+    placeLineOnLink (nav) {
+      this.showLine = nav
+    },
+    checkSelectedNav (nav) {
+      return this.showLine === nav
+    }
   }
 }
 </script>
@@ -74,7 +74,6 @@ export default {
 }
 
 .nm-header__link {
-  font-size: 1em;
   padding: 10px;
   margin: 0px 20px;
 }
@@ -84,7 +83,6 @@ export default {
   width: 35px;
   margin: 0px auto;
   border-radius: 5px;
-  border: none;
   background-color: #3088CA;
   animation: line .1s linear;
 }
